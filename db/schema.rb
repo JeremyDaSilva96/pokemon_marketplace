@@ -10,9 +10,47 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_29_112627) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_30_115200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "favorites", force: :cascade do |t|
+    t.bigint "pokemon_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pokemon_id"], name: "index_favorites_on_pokemon_id"
+    t.index ["user_id"], name: "index_favorites_on_user_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.bigint "pokemon_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pokemon_id"], name: "index_orders_on_pokemon_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
+  end
+
+  create_table "pokemons", force: :cascade do |t|
+    t.string "name"
+    t.integer "credit"
+    t.boolean "available"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_pokemons_on_user_id"
+  end
+
+  create_table "requests", force: :cascade do |t|
+    t.integer "proposal"
+    t.bigint "pokemon_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pokemon_id"], name: "index_requests_on_pokemon_id"
+    t.index ["user_id"], name: "index_requests_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -26,4 +64,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_29_112627) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "favorites", "pokemons"
+  add_foreign_key "favorites", "users"
+  add_foreign_key "orders", "pokemons"
+  add_foreign_key "orders", "users"
+  add_foreign_key "pokemons", "users"
+  add_foreign_key "requests", "pokemons"
+  add_foreign_key "requests", "users"
 end
